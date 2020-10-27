@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=750">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            background-image:url('./images/apple.jpg') ;
+            background-size: 750px;
+            background-repeat: no-repeat;
+            height: 100vh;
+        }
+        .iTouch{
+            width: 120px;
+            height: 120px;
+            border-radius: 25px;
+            background: #222a37;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+        }
+        .circle{
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #505662;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .circle::before{
+            content: '';
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            background: #92959e;
+            border:solid 2px #363d45;
+            position: absolute;
+
+        }
+        .circle::after{
+            content: '';
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #fff;
+            border:solid 2px #686870;
+            position: absolute;
+
+        }
+        .transparent{
+            opacity: 0.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="iTouch transparent">
+        <div class="circle"></div>
+    </div>
+    <script>
+        const iTouch=document.querySelector('.iTouch')
+        iTouch.addEventListener('touchstart',function(e){
+            this.style.transition=''
+            clearTimeout(this.timer)
+            this.classList.remove('transparent')
+
+            this.left=this.offsetLeft
+            this.x=e.targetTouches[0].clientX
+
+            this.top=this.offsetTop
+            this.y=e.targetTouches[0].clientY
+        })
+        iTouch.addEventListener('touchmove',function(e){
+            this._x=e.targetTouches[0].clientX
+            this.newLeft=this._x-(this.x-this.left)
+            //console.log(this.newLeft);
+            this._y=e.targetTouches[0].clientY
+            this.newTop=this._y-(this.y-this.top)
+            
+            if(this.newLeft<=0){
+                this.newLeft=0
+            }
+            if(this.newLeft>=document.documentElement.clientWidth-this.offsetWidth){
+                this.newLeft=document.documentElement.clientWidth-this.offsetWidth
+            }
+            if(this.newTop<=0){
+                this.newTop=0
+            }
+            if(this.newTop>=document.documentElement.clientHeight-this.offsetHeight){
+                this.newTop=document.documentElement.clientHeight-this.offsetHeight
+            }
+
+            this.style.left=this.newLeft+'px'
+            this.style.top=this.newTop+'px'
+            
+        })
+        iTouch.addEventListener('touchend',function(e){
+            this.style.transition='all 0.3s ease'
+            
+            let middle=(document.documentElement.clientWidth-this.offsetWidth)/2
+            if(this.newLeft<=middle){
+                this.style.left=0+'px'
+            }else{
+                this.style.left=document.documentElement.clientWidth-this.offsetWidth+'px'
+            }
+            this.timer=setTimeout(()=>{
+                this.classList.add('transparent')
+            },2000)
+        })
+    </script>
+</body>
+</html>
